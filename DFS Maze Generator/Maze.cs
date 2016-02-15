@@ -1,57 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DFS_Maze_Generator
 {
-    class Program
+    class Maze
     {
-
-        static void Main(string[] args)
-        {
-            Console.WriteLine("DFS Maze Generator");
-            int[,] mazeArray;
-            mazeArray = generateMaze();
-            printMaze(mazeArray);
-        }
-
-
-        private static int[,] generateMaze()
-        {
-            int height = 13;
-            int length = 13;
-            int[,] maze = new int[height, length];
-
-            //intialise array with open fields
-            for (int i = 0; i < height; i++)
-            {
-                for (int j = 0; j < length; j++)
-                {
-                    maze[i, j] = 0;
-                }
-            }
-
-            Random rnd = new Random();
-            //Generate random starting x
-            int startingX = rnd.Next(length);
-
-            //Generate random starting y
-            int startingY = rnd.Next(height);
-
-            //Old version without backtracking
-            //maze = recursion(startingX, startingY, maze, length, height);
-
-
-            //Recursion with backtracking
-
-            var MazeStack = new List<Stack>(); //Should be placed outside of the function
-            maze = recursionWithBackTracking(startingX, startingY, maze, MazeStack, length, height, true);
-
-            return maze;
-
-        }
-
-        private static int[] generateRandomDirections()
+        private int[] generateRandomDirections()
         {
             int[] randoms = new int[4];
             for (int i = 0; i < 4; i++)
@@ -74,7 +31,7 @@ namespace DFS_Maze_Generator
 
         }
 
-        private static int[,] recursionWithBackTracking(int x, int y, int[,] maze, List<Stack> mazeStack, int width, int height, bool firstRun)
+        private int[,] recursionWithBackTracking(int x, int y, int[,] maze, List<Stack> mazeStack, int width, int height, bool firstRun)
         {
 
             //Both of these values should be added to the stack
@@ -238,82 +195,42 @@ namespace DFS_Maze_Generator
 
         }
 
-        private static int[,] recursion(int x, int y, int[,] maze, int width, int height)
+        private int[,] generateMaze()
         {
-            int[] randDirections = generateRandomDirections();
+            int height = 13;
+            int length = 13;
+            int[,] maze = new int[height, length];
 
-            for (int i = 0; i < randDirections.Length; i++)
+            //intialise array with open fields
+            for (int i = 0; i < height; i++)
             {
-                switch (randDirections[i])
+                for (int j = 0; j < length; j++)
                 {
-                    case 0: //Up
-                        if (x - 2 <= 0)
-                        {
-                            continue;
-                        }
-
-                        if (maze[x - 2, y] != 0) //If node has not been previously visited
-                        {
-                            maze[x - 2, y] = 0; //Marked as visited
-                            maze[x - 1, y] = 0;
-
-
-                            recursion(x - 2, y, maze, width, height);
-                        }
-                        break;
-
-                    case 1: //Right
-                        if (y + 2 >= width - 1)//Out by one error
-                        {
-                            continue;
-                        }
-
-                        if (maze[x, y + 2] != 0)
-                        {
-                            maze[x, y + 2] = 0;
-                            maze[x, y + 1] = 0;
-
-                            recursion(x, y + 2, maze, width, height);
-                        }
-                        break;
-
-                    case 2: //Down
-                        if (x + 2 >= height - 1)
-                        {
-                            continue;
-                        }
-
-                        if (maze[x + 2, y] != 0)
-                        {
-                            maze[x + 2, y] = 0;
-                            maze[x + 1, y] = 0;
-
-                            recursion(x + 2, y, maze, width, height);
-                        }
-                        break;
-
-                    case 3: //Left
-                        if (y - 2 <= 0)
-                        {
-                            continue;
-                        }
-
-                        if (maze[x, y - 2] != 0)
-                        {
-                            maze[x, y - 2] = 0;
-                            maze[x, y - 1] = 0;
-
-                            recursion(x, y - 2, maze, width, height);
-                        }
-                        break;
-
+                    maze[i, j] = 0;
                 }
             }
 
-            return maze;
-        }
+            Random rnd = new Random();
+            //Generate random starting x
+            int startingX = rnd.Next(length);
 
-        static void printMaze(int[,] maze)
+            //Generate random starting y
+            int startingY = rnd.Next(height);
+
+            //Old version without backtracking
+            //maze = recursion(startingX, startingY, maze, length, height);
+
+
+            //Recursion with backtracking
+
+            var MazeStack = new List<Stack>(); //Should be placed outside of the function
+            maze = recursionWithBackTracking(startingX, startingY, maze, MazeStack, length, height, true);
+
+            return maze;
+
+        }
+        
+        private void printMaze(int[,] maze)
         {
             int rowCount = maze.GetLength(0);
             int colCount = maze.GetLength(1);
@@ -329,6 +246,5 @@ namespace DFS_Maze_Generator
             }
             Console.Read();
         }
-
     }
 }
